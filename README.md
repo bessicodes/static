@@ -107,6 +107,27 @@ appears on its own.
 
 ---
 
+## Regenerating the artwork
+
+The 585 x 559 templates in `designs/` are generated. `tools/gen/` holds the
+painter for each design plus the wrap engine that guarantees a print meets
+itself at every seam.
+
+```bash
+cd tools/gen && npm install
+node build.mjs                  # only designs with no PNG yet
+node build.mjs --force          # redraw everything
+node build.mjs S24 P13 --force  # redraw just these
+node check.mjs                  # audit seams and coverage
+```
+
+`check.mjs` is the safety net. It flags a template whose print jumps at a wrap
+seam, whose back or sides are less covered than its front, or whose two sleeves
+disagree — the exact faults that make a classic template look cheap on the body.
+
+`build.mjs` never overwrites an existing PNG unless you pass `--force`, so
+hand-made artwork is safe.
+
 ## Running it locally
 
 You need a real HTTP server — ES modules and `fetch()` do not work from
