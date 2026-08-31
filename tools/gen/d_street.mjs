@@ -671,10 +671,10 @@ export default {
       const r = L.rng(77);
       const cols = ['#ff5f8d', '#ffb03a', '#4fc3f7', '#a06bff'];
       for (let i = 0; i < 9; i++) {
-        const cx = r() * w, cy = r() * h, rad = 26 + r() * 34;
+        const cx = r() * w, cy = r() * h, rad = 34 + r() * 42;
         const col = cols[(r() * cols.length) | 0];
         for (const off of [-w, 0, w]) {
-          b.save(); b.globalAlpha = 0.34;
+          b.save(); b.globalAlpha = 0.62;
           L.blob(b, cx + off, cy, rad, L.hex(col), 1);
           b.restore();
         }

@@ -3,3 +3,5 @@ desktop.ini
 .DS_Store
 node_modules/
 tools/gen/package-lock.json
+# review renders, regenerated on demand
+tools/gen/*.png

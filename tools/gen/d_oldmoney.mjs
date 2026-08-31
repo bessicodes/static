@@ -75,24 +75,55 @@ export function argyle(b, w, h, bg, d1, d2, line) {
   b.setLineDash([]);
 }
 
-/** Vertical braided cables, as on a cricket sweater. */
+/**
+ * Braided cables, as on a cricket sweater.
+ *
+ * A vertical gradient band alone just reads as corrugation. What makes a cable
+ * legible is the PLAIT: two rope strands crossing over each other, with the
+ * front strand lit and the back one shadowed, so the eye sees strands passing
+ * over and under rather than a stripe.
+ */
 export function cables(b, w, h, base) {
   b.fillStyle = L.rgb(base); b.fillRect(0, 0, w, h);
   L.knit(b, 0, 0, w, h, L.shade(base, 0.3), L.shade(base, -0.3), 5, 4);
+
   const step = 32;                                    // divides 384 and 256
+  const pitch = 15, reach = 7;
+  b.lineCap = 'round';
+
   for (let cx = 0; cx < w; cx += step) {
-    // rope shading either side of the cable
-    const g = b.createLinearGradient(cx - 9, 0, cx + 9, 0);
-    g.addColorStop(0, L.rgba(L.shade(base, -0.30), 0.75));
-    g.addColorStop(0.5, L.rgba(L.shade(base, 0.26), 0.85));
-    g.addColorStop(1, L.rgba(L.shade(base, -0.30), 0.75));
-    b.fillStyle = g; b.fillRect(cx - 9, 0, 18, h);
-    // the plait itself
-    b.strokeStyle = L.rgba(L.shade(base, -0.34), 0.7);
-    b.lineWidth = 2;
-    for (let y = -12; y < h + 12; y += 12) {
-      b.beginPath(); b.moveTo(cx - 7, y); b.quadraticCurveTo(cx, y + 6, cx + 7, y + 12); b.stroke();
-      b.beginPath(); b.moveTo(cx + 7, y); b.quadraticCurveTo(cx, y + 6, cx - 7, y + 12); b.stroke();
+    // purl channel either side, so each cable sits in its own trough
+    for (const side of [-1, 1]) {
+      const g = b.createLinearGradient(cx + side * 8, 0, cx + side * 14, 0);
+      g.addColorStop(0, L.rgba(L.shade(base, -0.26), 0.7));
+      g.addColorStop(1, L.rgba(L.shade(base, -0.26), 0));
+      b.fillStyle = g;
+      b.fillRect(cx + (side < 0 ? -14 : 8), 0, 6, h);
+    }
+
+    for (let y = -pitch * 2; y < h + pitch * 2; y += pitch) {
+      // back strand first: darker, so it reads as passing underneath
+      b.strokeStyle = L.rgba(L.shade(base, -0.30), 0.85);
+      b.lineWidth = 6;
+      b.beginPath();
+      b.moveTo(cx + reach, y);
+      b.quadraticCurveTo(cx, y + pitch / 2, cx - reach, y + pitch);
+      b.stroke();
+
+      // front strand: body then highlight along its upper-left edge
+      b.strokeStyle = L.rgba(L.shade(base, 0.10), 0.95);
+      b.lineWidth = 6.5;
+      b.beginPath();
+      b.moveTo(cx - reach, y);
+      b.quadraticCurveTo(cx, y + pitch / 2, cx + reach, y + pitch);
+      b.stroke();
+
+      b.strokeStyle = L.rgba(L.shade(base, 0.38), 0.8);
+      b.lineWidth = 2;
+      b.beginPath();
+      b.moveTo(cx - reach - 1, y - 1);
+      b.quadraticCurveTo(cx - 1, y + pitch / 2 - 1, cx + reach - 1, y + pitch - 1);
+      b.stroke();
     }
   }
 }

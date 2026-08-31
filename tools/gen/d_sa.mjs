@@ -269,10 +269,11 @@ export default {
 
   'SA3_SPRINGVELD_SHORTS_SOCKS.png'(x) {
     // shorts on the hips and upper leg, bare knee, then hooped socks
-    L.wrapBand(x, 'torso', L.WAIST, 1 - L.WAIST, (b, w, h) => {
+    L.wrapBand(x, 'torso', 0, 1, (b, w, h) => {
       b.fillStyle = L.rgb(GREEN); b.fillRect(0, 0, w, h);
       L.weave(b, 0, 0, w, h, 0.05, 3);
     });
+    L.cap(x, 'torso', 'up', L.rgb(L.shade(GREEN, 0.04)));
     L.cap(x, 'torso', 'down', L.rgb(L.shade(GREEN, -0.3)));
 
     for (const part of ['rlimb', 'llimb']) {

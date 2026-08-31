@@ -409,9 +409,17 @@ export function shirtBody(ctx, len, paint) {
   }
 }
 
-/** Paints pants: lower torso from the waist down, plus both full legs. */
+/**
+ * Paints pants: the WHOLE torso block plus both legs.
+ *
+ * Roblox layers pants underneath the shirt, so a pants template has to fill the
+ * entire torso — not just the hips. Painting only from the waist down leaves a
+ * ring of bare skin around the stomach the moment the shirt is short, cropped,
+ * or missing. `waist` is still where the waistband detail goes, not where the
+ * fabric starts.
+ */
 export function pantsBody(ctx, paint, waist = WAIST, legLen = 1) {
-  wrapBand(ctx, 'torso', waist, 1 - waist, (b, c, h) => paint(b, c, h, 'torso'));
+  wrapBand(ctx, 'torso', 0, 1, (b, c, h) => paint(b, c, h, 'torso'));
   for (const part of ['rlimb', 'llimb']) {
     wrapBand(ctx, part, 0, legLen, (b, c, h) => paint(b, c, h, part));
   }
@@ -427,6 +435,8 @@ export function shirtCaps(ctx, colour, len) {
 }
 
 export function pantsCaps(ctx, colour, legLen = 1) {
+  // top of the torso block is covered too — see pantsBody
+  cap(ctx, 'torso', 'up', rgb(shade(colour, 0.04)));
   cap(ctx, 'torso', 'down', rgb(shade(colour, -0.28)));
   for (const p of ['rlimb', 'llimb']) {
     // top of the leg sits under the hip and is always covered by the garment

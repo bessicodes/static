@@ -121,6 +121,14 @@ node build.mjs S24 P13 --force  # redraw just these
 node check.mjs                  # audit seams and coverage
 ```
 
+`render.mjs` + `wornsheet.mjs` render every design ON the mannequin offline, which
+is how you catch faults a flat template hides:
+
+```bash
+node wornsheet.mjs three shirt   # contact sheet of every shirt, as worn
+node wornsheet.mjs back pants    # same for pants, from behind
+```
+
 `check.mjs` is the safety net. It flags a template whose print jumps at a wrap
 seam, whose back or sides are less covered than its front, or whose two sleeves
 disagree — the exact faults that make a classic template look cheap on the body.

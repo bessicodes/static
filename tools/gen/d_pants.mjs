@@ -54,43 +54,68 @@ function backPockets(x, base, gold) {
   });
 }
 
-/** Genuinely transparent rips with frayed threads across the hole. */
+/**
+ * Distressed knee.
+ *
+ * A single oval hole reads as a pale floating blob on the body, because the
+ * skin behind it is brighter than the denim. Real ripped jeans read as a LADDER
+ * of horizontal slashes with white weft threads still spanning the gap, so that
+ * is what this draws: several thin cuts at the knee, a dark worn halo around
+ * them, and threads left bridging the openings.
+ */
 function rips(x, base, seed = 12) {
   for (const part of ['rlimb', 'llimb']) {
-    const u = L.faceU(part, 'front');
     const [px, py, pw, ph] = (part === 'rlimb' ? L.RLIMB : L.LLIMB).front;
     const r = L.rng(seed + (part === 'rlimb' ? 0 : 7));
-    const cx = px + pw / 2, cy = py + ph * 0.46;
+    const cx = px + pw / 2, cy = py + ph * 0.47;
+    const halfW = pw * 0.40;
 
+    // worn, bleached halo so the tear sits in a scuffed patch
     x.save();
-    // cut the hole
-    x.globalCompositeOperation = 'destination-out';
-    x.beginPath();
-    x.ellipse(cx, cy, 20, 8, 0, 0, 7);
-    x.fill();
-    x.beginPath();
-    x.ellipse(cx - 2, cy + 13, 14, 5, 0, 0, 7);
-    x.fill();
+    const g = x.createRadialGradient(cx, cy, 2, cx, cy, halfW * 1.5);
+    g.addColorStop(0, L.rgba(L.shade(base, 0.30), 0.55));
+    g.addColorStop(1, L.rgba(L.shade(base, 0.30), 0));
+    x.fillStyle = g;
+    x.fillRect(cx - halfW * 1.6, cy - 26, halfW * 3.2, 52);
     x.restore();
 
-    // frayed white threads spanning the gap
-    x.save();
-    x.strokeStyle = 'rgba(226,226,220,0.85)';
-    x.lineWidth = 0.9;
-    for (let i = 0; i < 16; i++) {
-      const tx = cx - 19 + r() * 38;
+    // the cuts themselves, cut clean through to skin
+    const slashes = [];
+    for (let i = 0; i < 4; i++) {
+      const sy = cy - 15 + i * 9 + (r() - 0.5) * 2;
+      const w = halfW * (0.55 + r() * 0.45);
+      slashes.push([sy, w]);
+      x.save();
+      x.globalCompositeOperation = 'destination-out';
       x.beginPath();
-      x.moveTo(tx, cy - 8);
-      x.lineTo(tx + (r() - 0.5) * 4, cy + 8);
+      x.ellipse(cx + (r() - 0.5) * 5, sy, w, 2.4 + r() * 1.2, 0, 0, 7);
+      x.fill();
+      x.restore();
+    }
+
+    // white weft threads still bridging the gaps
+    x.save();
+    x.strokeStyle = 'rgba(232,230,222,0.9)';
+    x.lineWidth = 0.8;
+    for (let i = 0; i < 22; i++) {
+      const tx = cx - halfW + r() * halfW * 2;
+      x.beginPath();
+      x.moveTo(tx, cy - 18);
+      x.lineTo(tx + (r() - 0.5) * 3, cy + 18);
       x.stroke();
     }
     x.restore();
 
-    // darker denim lip around the tear
+    // dark shadow along the top lip of each cut, so the hole reads as depth
     x.save();
-    x.strokeStyle = L.rgba(L.shade(base, -0.35), 0.7);
-    x.lineWidth = 2;
-    x.beginPath(); x.ellipse(cx, cy, 21, 9, 0, 0, 7); x.stroke();
+    x.globalCompositeOperation = 'source-atop';
+    x.strokeStyle = 'rgba(0,0,0,0.45)';
+    x.lineWidth = 1.6;
+    for (const [sy, w] of slashes) {
+      x.beginPath();
+      x.ellipse(cx, sy, w, 3.4, 0, Math.PI, Math.PI * 2);
+      x.stroke();
+    }
     x.restore();
   }
 }
@@ -211,11 +236,12 @@ export default {
       for (let u = 24; u < w; u += 32) { b.beginPath(); b.moveTo(u, 0); b.lineTo(u, h); b.stroke(); }
     };
     // skirt on the hips and the top of the legs
-    L.wrapBand(x, 'torso', L.WAIST, 1 - L.WAIST, (b, w, h) => {
+    L.wrapBand(x, 'torso', 0, 1, (b, w, h) => {
       tartan(b, w, h);
       b.fillStyle = 'rgba(0,0,0,0.22)';
       for (let u = 0; u < w; u += 16) b.fillRect(u, 0, 2, h);        // pleats
     });
+    L.cap(x, 'torso', 'up', L.rgb(L.shade(navy, 0.04)));
     L.cap(x, 'torso', 'down', L.rgb(L.shade(navy, -0.3)));
     for (const part of ['rlimb', 'llimb']) {
       L.wrapBand(x, part, 0, 0.30, (b, w, h) => {
@@ -257,10 +283,11 @@ export default {
 
   'P7_PASTEL_SHORTS_KNEESOCKS.png'(x) {
     const lilac = L.hex('#c9b4e8'), pink = L.hex('#f2a8c8'), sock = L.hex('#f6eef8');
-    L.wrapBand(x, 'torso', L.WAIST, 1 - L.WAIST, (b, w, h) => {
+    L.wrapBand(x, 'torso', 0, 1, (b, w, h) => {
       b.fillStyle = L.rgb(lilac); b.fillRect(0, 0, w, h);
       L.weave(b, 0, 0, w, h, 0.04, 3);
     });
+    L.cap(x, 'torso', 'up', L.rgb(L.shade(lilac, 0.04)));
     L.cap(x, 'torso', 'down', L.rgb(L.shade(lilac, -0.3)));
     L.face(x, 'torso', 'front', (c, fx, fy, fw, fh) => {
       // bow at the waist
@@ -282,17 +309,18 @@ export default {
         b.fillStyle = L.rgb(L.shade(lilac, -0.12));
         b.fillRect(0, h - 7, w, 7);                                   // turn-up cuff
         b.fillStyle = 'rgba(0,0,0,0.18)'; b.fillRect(0, h - 8, w, 1.4);
-        // hearts on the thighs, on every face
-        b.fillStyle = L.rgba(pink, 0.9);
+        // hearts on the thighs, on every face — sized up and outlined so they
+        // do not disappear into the lilac at avatar scale
         for (let f = 0; f < 4; f++) {
-          const cx = f * (w / 4) + w / 8, cy = h * 0.42;
+          const cx = f * (w / 4) + w / 8, cy = h * 0.44, s = 1.9;
           b.beginPath();
-          b.moveTo(cx, cy + 5);
-          b.quadraticCurveTo(cx - 7, cy - 1, cx - 3.5, cy - 5);
-          b.quadraticCurveTo(cx, cy - 7, cx, cy - 2);
-          b.quadraticCurveTo(cx, cy - 7, cx + 3.5, cy - 5);
-          b.quadraticCurveTo(cx + 7, cy - 1, cx, cy + 5);
-          b.fill();
+          b.moveTo(cx, cy + 5 * s);
+          b.quadraticCurveTo(cx - 7 * s, cy - 1 * s, cx - 3.5 * s, cy - 5 * s);
+          b.quadraticCurveTo(cx, cy - 7 * s, cx, cy - 2 * s);
+          b.quadraticCurveTo(cx, cy - 7 * s, cx + 3.5 * s, cy - 5 * s);
+          b.quadraticCurveTo(cx + 7 * s, cy - 1 * s, cx, cy + 5 * s);
+          b.fillStyle = L.rgb(pink); b.fill();
+          b.strokeStyle = 'rgba(150,60,105,0.75)'; b.lineWidth = 1.2; b.stroke();
         }
       });
       L.cap(x, part, 'up', L.rgb(L.shade(lilac, -0.1)));
@@ -377,14 +405,18 @@ export default {
         b.beginPath(); b.arc(u, h / 2, 2.4, 0, 7); b.fill();
       }
     });
-    // butterflies on the thigh, every face
+    // butterflies on the thigh, on every face. They need a body and antennae to
+    // read as butterflies — wings alone collapse into a pink X at this size.
     for (const part of ['rlimb', 'llimb']) {
-      L.wrapBand(x, part, 0.16, 0.16, (b, w, h) => {
+      L.wrapBand(x, part, 0.20, 0.22, (b, w, h) => {
         for (let f = 0; f < 4; f++) {
           const cx = f * (w / 4) + w / 8;
-          b.save(); b.translate(cx, h / 2); b.scale(0.5, 0.5);
+          b.save(); b.translate(cx, h / 2); b.scale(0.66, 0.66);
           const wing = (dir) => {
-            b.fillStyle = L.rgba(L.hex('#f078bb'), 0.9);
+            const g = b.createLinearGradient(0, -14, dir * 22, 14);
+            g.addColorStop(0, L.rgb(L.hex('#f8a8d4')));
+            g.addColorStop(1, L.rgb(L.hex('#d94fa0')));
+            b.fillStyle = g;
             b.beginPath();
             b.moveTo(0, -2);
             b.quadraticCurveTo(dir * 20, -20, dir * 22, -6);
@@ -392,8 +424,14 @@ export default {
             b.quadraticCurveTo(dir * 20, 6, dir * 16, 16);
             b.quadraticCurveTo(dir * 8, 20, 0, 6);
             b.closePath(); b.fill();
+            b.strokeStyle = 'rgba(60,20,50,0.6)'; b.lineWidth = 1.2; b.stroke();
           };
           wing(-1); wing(1);
+          b.fillStyle = 'rgba(50,18,44,0.9)';
+          b.beginPath(); b.ellipse(0, 1, 1.9, 9, 0, 0, 7); b.fill();
+          b.strokeStyle = 'rgba(50,18,44,0.8)'; b.lineWidth = 1.2;
+          b.beginPath(); b.moveTo(0, -7); b.quadraticCurveTo(-6, -15, -9, -16); b.stroke();
+          b.beginPath(); b.moveTo(0, -7); b.quadraticCurveTo(6, -15, 9, -16); b.stroke();
           b.restore();
         }
       });
