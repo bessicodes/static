@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en-ZA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Upload &amp; Pricing Guide — STATIC</title>
+<meta name="description" content="What it costs to publish classic Roblox clothing in 2026, what verification and membership you need, how the progressive revenue share works, and the maths that shows why pricing at the floor is a trap.">
+<meta name="theme-color" content="#07080a">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/site.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap hdr-in">
+    <a class="mark" href="index.html" data-word="STATIC">STATIC</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="catalogue.html">Catalogue</a>
+      <a href="preview.html">Preview</a>
+      <a href="guide.html">Guide</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+
+    <div class="page-head">
+      <h1 class="tear" data-word="Guide">Guide</h1>
+      <p>
+        How to upload classic clothing to the Roblox Marketplace, what it costs, and
+        how to price it so the fees do not eat you alive.
+      </p>
+    </div>
+
+    <div class="prose">
+
+      <div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+
+      <p class="tag" style="margin-top:16px">Figures checked against Roblox’s own documentation on 31 August 2026</p>
+
+      <nav class="toc" aria-labelledby="toc-h">
+        <h2 id="toc-h">On this page</h2>
+        <ol>
+          <li><a href="#cost">What it costs to publish</a></li>
+          <li><a href="#account">What your account needs first</a></li>
+          <li><a href="#share">How the revenue share actually works</a></li>
+          <li><a href="#maths">The pricing table</a></li>
+          <li><a href="#price">So where should you price?</a></li>
+          <li><a href="#selling">What is selling right now</a></li>
+          <li><a href="#quality">What makes a template look expensive</a></li>
+          <li><a href="#sources">Sources</a></li>
+        </ol>
+      </nav>
+
+      <h2 id="cost">1. What it costs to publish</h2>
+
+      <p>
+        Since 14 July 2026, putting one classic clothing item on sale costs
+        <strong>90 Robux up front</strong>, split into two very different charges:
+      </p>
+
+      <ul>
+        <li><strong>80 Robux upload fee</strong>, charged per submission. This is a fee. It is gone the moment you submit.</li>
+        <li><strong>10 Robux publishing advance</strong>, charged when you list the item for sale. This one is a
+          <em>rebatable advance</em> — Roblox pays it back out of the platform’s share as the item sells.</li>
+      </ul>
+
+      <div class="callout warn">
+        <p>
+          <strong>The upload fee is not refunded if moderation rejects your file.</strong>
+          Roblox’s wording is that upload fees “are not refunded if an item is rejected through moderation”.
+          Submit a design that trips the filters and you are out 80 Robux with nothing to show for it.
+        </p>
+        <p>
+          This is the single biggest reason to test in Studio first. Wear the texture on a real
+          R6 body, check every face, and only then submit. A rejected upload costs more than
+          53 sales at the price floor.
+        </p>
+      </div>
+
+      <p>
+        These numbers landed softer than they were first announced. Roblox originally floated a
+        200 Robux upload fee with advances starting at 600 Robux on 7 July 2026, then revised
+        down to 80 + 10 on 13 July after creator pushback — before the rules went live.
+      </p>
+
+      <h2 id="account">2. What your account needs first</h2>
+
+      <p>Uploading and selling are two different permission levels, and people get caught out by the gap.</p>
+
+      <h3>To upload at all</h3>
+      <p>
+        <strong>ID verification or a linked parental account.</strong> You verify with a government ID,
+        or a verified parent account is linked to yours. Without this you cannot upload the file.
+      </p>
+
+      <h3>To actually sell it</h3>
+      <ul>
+        <li><strong>2-step verification</strong> on your account.</li>
+        <li><strong>Roblox Plus, or Premium 1000 / Premium 2200.</strong> The plain entry-level Premium tier is not enough.</li>
+      </ul>
+
+      <div class="callout">
+        <p>
+          <strong>The membership is not a one-off gate — it keeps your catalogue live.</strong>
+          Roblox began delisting 2D clothing from creators without an active qualifying membership.
+          That deadline was first set for 20 March 2026, then extended to 31 July 2026. It has now passed,
+          so the requirement is fully in force: let the subscription lapse and your items come off sale.
+        </p>
+        <p>
+          Items people already bought stay in their inventory and stay wearable. You just stop earning from new sales.
+        </p>
+      </div>
+
+      <p>
+        Without the membership you can still upload a design and wear it yourself. You simply cannot sell it.
+        Budget the subscription as a running cost of the business, not a once-off.
+      </p>
+
+      <h2 id="share">3. How the revenue share actually works</h2>
+
+      <p>
+        Roblox uses a <strong>progressive</strong> revenue share. The further above the price floor you list,
+        the larger the slice you keep. It is based purely on your listed price relative to the current floor —
+        nothing else about the item changes it.
+      </p>
+
+      <p>
+        The floor for <strong>classic shirts and classic pants is 5 Robux</strong>. Here is the full ladder:
+      </p>
+
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <caption>Progressive revenue share — creator’s cut by multiple of the price floor</caption>
+          <thead>
+            <tr>
+              <th scope="col">Multiple of floor</th>
+              <th scope="col">1×</th><th scope="col">1.3×</th><th scope="col">1.5×</th>
+              <th scope="col">2×</th><th scope="col">2.5×</th><th scope="col">3×</th>
+              <th scope="col">3.5×</th><th scope="col">4×</th><th scope="col">5×</th><th scope="col">6×+</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Your share</td>
+              <td class="num">30%</td><td class="num">37%</td><td class="num">41%</td>
+              <td class="num">50%</td><td class="num">57%</td><td class="num">62%</td>
+              <td class="num">65%</td><td class="num">67%</td><td class="num">69%</td><td class="num">70%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>
+        Note the shape of it. The jump from 1× to 2× more than doubles your take home per sale twice over —
+        the price doubles <em>and</em> your percentage goes from 30% to 50%. After about 3× the curve flattens
+        hard; going from 3× to 6× doubles the price again but only moves your share from 62% to 70%.
+      </p>
+
+      <h2 id="maths">4. The pricing table</h2>
+
+      <p>
+        This is the table that matters. Same garment, same artwork, same effort — the only thing changing
+        is the number you type into the price box.
+      </p>
+
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <caption>Classic shirt or pants · 5 Robux floor · 90 Robux to publish</caption>
+          <thead>
+            <tr>
+              <th scope="col">Price</th>
+              <th scope="col">× floor</th>
+              <th scope="col">Your share</th>
+              <th scope="col">You keep per sale</th>
+              <th scope="col">Sales to clear the 90 R</th>
+              <th scope="col">From 100 sales</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="bad">
+              <td>5 R</td><td>1×</td><td class="num">30%</td><td class="num">1.50 R</td>
+              <td class="num">60 sales</td><td class="num">150 R</td>
+            </tr>
+            <tr>
+              <td>6.5 R</td><td>1.3×</td><td class="num">37%</td><td class="num">2.41 R</td>
+              <td class="num">38 sales</td><td class="num">241 R</td>
+            </tr>
+            <tr>
+              <td>7.5 R</td><td>1.5×</td><td class="num">41%</td><td class="num">3.08 R</td>
+              <td class="num">30 sales</td><td class="num">308 R</td>
+            </tr>
+            <tr>
+              <td>10 R</td><td>2×</td><td class="num">50%</td><td class="num">5.00 R</td>
+              <td class="num">18 sales</td><td class="num">500 R</td>
+            </tr>
+            <tr>
+              <td>12.5 R</td><td>2.5×</td><td class="num">57%</td><td class="num">7.13 R</td>
+              <td class="num">13 sales</td><td class="num">713 R</td>
+            </tr>
+            <tr>
+              <td>15 R</td><td>3×</td><td class="num">62%</td><td class="num">9.30 R</td>
+              <td class="num">10 sales</td><td class="num">930 R</td>
+            </tr>
+            <tr>
+              <td>17.5 R</td><td>3.5×</td><td class="num">65%</td><td class="num">11.38 R</td>
+              <td class="num">8 sales</td><td class="num">1 138 R</td>
+            </tr>
+            <tr>
+              <td>20 R</td><td>4×</td><td class="num">67%</td><td class="num">13.40 R</td>
+              <td class="num">7 sales</td><td class="num">1 340 R</td>
+            </tr>
+            <tr>
+              <td>25 R</td><td>5×</td><td class="num">69%</td><td class="num">17.25 R</td>
+              <td class="num">6 sales</td><td class="num">1 725 R</td>
+            </tr>
+            <tr class="good">
+              <td>30 R</td><td>6×</td><td class="num">70%</td><td class="num">21.00 R</td>
+              <td class="num">5 sales</td><td class="num">2 100 R</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout">
+        <p>
+          <strong>Read the two ends against each other.</strong> At the floor you need
+          <strong>60 sales</strong> just to get back to zero. At 6× the floor you need <strong>5</strong>.
+          Over 100 sales the floor pays you 150 Robux and 6× pays you 2 100 — <strong>fourteen times more</strong>
+          for the same work.
+        </p>
+        <p>
+          Most sellers list at the floor because it looks like the easiest sale. It is the worst rate on the
+          table, and it is the rate that makes the 80 Robux upload fee feel unrecoverable.
+        </p>
+      </div>
+
+      <h2 id="price">5. So where should you price?</h2>
+
+      <p>
+        The honest answer is that a 5 Robux item is not meaningfully easier to sell than a 15 Robux one.
+        Nobody browsing the Marketplace is priced out by ten Robux. What actually decides the sale is
+        whether the design looks good on the avatar in the thumbnail.
+      </p>
+
+      <ul>
+        <li><strong>15 Robux (3×) is the sensible default.</strong> You keep 62%, you clear your costs in ten sales,
+          and it still reads as cheap to a buyer.</li>
+        <li><strong>Do not list below 10 Robux (2×).</strong> Under 2× you are handing Roblox the majority of every sale
+          and giving up the compounding benefit entirely.</li>
+        <li><strong>Push to 20–30 Robux for your strongest pieces.</strong> The detailed, wrapped, all-over work —
+          the things nobody else has — carry a higher price without any drop in conversion.</li>
+        <li><strong>Price a matching set as a set.</strong> If the shirt and pants only work together, someone buying
+          one will buy both. That is two items of margin from one decision.</li>
+      </ul>
+
+      <p>
+        Above 6× the floor there is no further share to unlock — 70% is the ceiling. Past 30 Robux you are
+        making a pure positioning decision, not a revenue-share one.
+      </p>
+
+      <h2 id="selling">6. What is selling right now</h2>
+
+      <p>
+        Two aesthetics dominate Roblox clothing going into late 2026, and they pull in opposite directions:
+      </p>
+
+      <h3>Y2K</h3>
+      <p>
+        The strongest and most durable trend. Early-2000s revival — low-rise fits, baggy and wide-leg denim,
+        crop tops and baby tees, butterflies, rhinestones and bedazzling, chrome and holographic finishes,
+        velour tracksuits, airbrush graphics. Bright, metallic, nostalgic. This is where volume is.
+      </p>
+
+      <h3>Old money / quiet luxury</h3>
+      <p>
+        The opposite end and still climbing, pulled along by roleplay and dress-up games. Tailored blazers,
+        cable and argyle knits, camel and cream neutrals, linen, understated everything. It reads as
+        elegant rather than loud, and it overlaps heavily with the coquette and academia crowds.
+      </p>
+
+      <h3>Consistently underneath both</h3>
+      <ul>
+        <li><strong>Oversized and baggy silhouettes</strong> — hoodies, wide denim, layered looks.</li>
+        <li><strong>Alt and dark streetwear</strong> — goth, emo, punk, chains, leather.</li>
+        <li><strong>Matching sets</strong> — anything where the shirt and pants are built as one outfit.</li>
+        <li><strong>Sport and blokecore kits</strong> — retro football and rugby shirts, track pants.</li>
+      </ul>
+
+      <p>
+        A practical note on keywords: the styles above are what people type into the search box. The keyword
+        list on every design in <a href="catalogue.html">the catalogue</a> is written for exactly this — copy it
+        straight into your listing description.
+      </p>
+
+      <h2 id="quality">7. What makes a template look expensive</h2>
+
+      <p>
+        Almost all of the visible difference between a good classic template and a cheap one comes down to
+        five things:
+      </p>
+
+      <h3>It survives being seen from behind</h3>
+      <p>
+        The cheap tell is a graphic on the chest and nothing anywhere else — blank back, blank shoulders,
+        blank undersides of the sleeves. A flat image has to wrap a 3D body, and the hard part is making the
+        front, back, sides, shoulders and sleeves meet cleanly. If your design only works from the front,
+        it is half a design.
+      </p>
+
+      <h3>Shading, not flat fill</h3>
+      <p>
+        Subtle creases, highlights and shadows are what separate a flat-looking shirt from a proper one.
+        Use restrained values — a medium grey or a dark blue-grey on a multiply layer works. Heavy blur turns
+        to mud at Roblox’s scale, where the whole torso front is only 128 × 128 pixels.
+      </p>
+
+      <h3>Nothing important near a seam</h3>
+      <p>
+        Keep text, logos and small readable detail away from UV boundaries and joints. Anything that crosses a
+        seam gets cut or distorted on the body. Repeating patterns need a cycle that divides the wrap exactly,
+        or the pattern visibly jumps where the faces meet.
+      </p>
+
+      <h3>Correct, unmodified canvas</h3>
+      <p>
+        <code>585 × 559</code>, never resized, cropped or rotated. Most failed uploads are wrong dimensions,
+        low-contrast type, or colour bleeding over the edge of a UV region.
+      </p>
+
+      <h3>It was tested on a body before submission</h3>
+      <p>
+        Always look at it in 3D before you spend the 80 Robux. That is exactly what the
+        <a href="preview.html">preview on this site</a> is for — drop your own PNG onto the mannequin,
+        spin it, check the back and the sleeves, and save a render for your thumbnail while you are there.
+      </p>
+
+      <h2 id="sources">8. Sources</h2>
+
+      <ul>
+        <li><a href="https://create.roblox.com/docs/marketplace/marketplace-fees-and-commissions">Roblox Creator Hub — Marketplace fees and commissions</a> (fees, advance, refund policy, revenue-share ladder)</li>
+        <li><a href="https://create.roblox.com/docs/marketplace/marketplace-policy">Roblox Creator Hub — Marketplace policy</a> (ID verification, 2-step verification, membership requirement)</li>
+        <li><a href="https://roblox.fandom.com/wiki/Classic_clothing">Roblox Wiki — Classic clothing</a> (price floor, template size, timeline)</li>
+        <li><a href="https://devforum.roblox.com/t/building-a-safer-marketplace-updates-to-2d-avatar-items-uploading-and-publishing-requirements/4474667">Roblox DevForum — Updates to 2D avatar items, uploading and publishing requirements</a> (announcement and revisions)</li>
+      </ul>
+
+      <div class="callout">
+        <p>
+          Roblox changes these numbers. The fee structure on this page moved twice inside a single week in
+          July 2026. Check the fees page against your own upload screen before you commit a batch.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot-in">
+    <span class="mark" data-word="STATIC" style="font-size:15px">STATIC</span>
+    <span class="tag">Roblox classic clothing · Johannesburg</span>
+    <span style="margin-left:auto">
+      <a href="index.html">Home</a> ·
+      <a href="catalogue.html">Catalogue</a> ·
+      <a href="preview.html">Preview</a>
+    </span>
+  </div>
+</footer>
+
+<script type="module">
+  import { markNav } from './assets/js/ui.js';
+  markNav();
+</script>
+</body>
+</html>

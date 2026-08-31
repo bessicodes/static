@@ -1,0 +1,24 @@
+{
+    "generated":  "2026-08-31T14:46:47+02:00",
+    "note":  "Written by tools/prepare-designs.ps1. Lists artwork present in /designs.",
+    "designs":  [
+                    "1_OPIUM_NOCTVRNE.png",
+                    "2_Y2K_REBEL_SOVL.png",
+                    "3_ESSENTIALS_CREAM.png",
+                    "4_EMO_VOIDKID.png",
+                    "S12_NOTHING_OVERSIZED_HOODIE.png",
+                    "S9_N3ON_CYBER_GRID.png",
+                    "ST3_STATIC_NO_SIGNAL_HOODIE.png",
+                    "ST6_STATIC_UTILITY_PANTS.png"
+                ],
+    "thumbs":  [
+                   "1_OPIUM_NOCTVRNE.png",
+                   "2_Y2K_REBEL_SOVL.png",
+                   "3_ESSENTIALS_CREAM.png",
+                   "4_EMO_VOIDKID.png",
+                   "S12_NOTHING_OVERSIZED_HOODIE.png",
+                   "S9_N3ON_CYBER_GRID.png",
+                   "ST3_STATIC_NO_SIGNAL_HOODIE.png",
+                   "ST6_STATIC_UTILITY_PANTS.png"
+               ]
+}
