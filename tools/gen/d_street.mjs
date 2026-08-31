@@ -339,7 +339,7 @@ export default {
   },
 
   'S11_MIDNIGHT_TAILORED_SUIT.png'(x) {
-    const char = L.hex('#2b2f38');
+    const char = L.hex('#39404f');
     L.shirtBody(x, L.SLEEVE.long, (b, w, h) => {
       b.fillStyle = L.rgb(char); b.fillRect(0, 0, w, h);
       L.weave(b, 0, 0, w, h, 0.05, 3);

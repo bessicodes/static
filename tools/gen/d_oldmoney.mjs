@@ -38,11 +38,28 @@ export function argyle(b, w, h, bg, d1, d2, line) {
     b.lineTo(cx, cy + gh / 2 * sx); b.lineTo(cx - gw / 2 * sx, cy);
     b.closePath(); b.fill();
   };
+  /*
+   * Two interleaved diamond lattices, each a fixed colour. Flipping the colours
+   * per cell (which is the intuitive thing to write) makes same-coloured
+   * diamonds run into each other and the whole thing collapses into diagonal
+   * stripes instead of argyle.
+   */
   for (let cy = -gh; cy < h + gh; cy += gh) {
     for (let cx = -gw; cx < w + gw; cx += gw) {
-      const odd = (((cx / gw) | 0) + ((cy / gh) | 0)) % 2 !== 0;
-      diamond(cx, cy, odd ? d1 : d2);
-      diamond(cx + gw / 2, cy + gh / 2, odd ? d2 : d1);
+      diamond(cx, cy, d1);
+      diamond(cx + gw / 2, cy + gh / 2, d2);
+    }
+  }
+  // thin ground-colour outline so neighbouring diamonds stay separate
+  b.strokeStyle = L.rgba(bg, 0.75); b.lineWidth = 1.2;
+  for (let cy = -gh; cy < h + gh; cy += gh) {
+    for (let cx = -gw; cx < w + gw; cx += gw) {
+      for (const [px, py] of [[cx, cy], [cx + gw / 2, cy + gh / 2]]) {
+        b.beginPath();
+        b.moveTo(px, py - gh / 2); b.lineTo(px + gw / 2, py);
+        b.lineTo(px, py + gh / 2); b.lineTo(px - gw / 2, py);
+        b.closePath(); b.stroke();
+      }
     }
   }
   // wine overstitch running both diagonals

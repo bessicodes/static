@@ -186,29 +186,61 @@ function circuit(b, w, h, seed) {
   for (const off of [-w, 0, w]) parts(off);
 }
 
-/** Molten chrome: shaded from a height field so highlights bend like metal. */
+/**
+ * Molten chrome.
+ *
+ * The height field has to be SMOOTH — two octaves, large features. Taking a
+ * derivative amplifies high frequencies, so a detailed field turns into grey
+ * hash rather than metal. The gradient is also sampled over a wide step for the
+ * same reason, which is what lets the highlights bend in broad flowing bands.
+ */
 function chrome(b, w, h, seed) {
-  const f = tileNoise(w, h, w, 4, seed);
-  const g2 = tileNoise(w, h, w, 5, seed + 13);
+  const f = tileNoise(w, h, w, 2, seed);
   const at = (x, y) => {
-    const xx = ((x % w) + w) % w, yy = L.clamp(y, 0, h - 1) | 0;
-    return f[yy*w+xx] * 0.7 + g2[yy*w+xx] * 0.3;
+    const xx = ((x % w) + w) % w;
+    const yy = Math.min(Math.max(y | 0, 0), h - 1);
+    return f[yy * w + xx];
   };
+  // Explicit chrome ramp. Metal does not read as a smooth grey gradient — it
+  // reads as a hard jump from a dark ground reflection to a bright sky one.
+  const RAMP = [
+    [0.00, [ 16,  22,  34]],
+    [0.34, [ 44,  54,  72]],
+    [0.46, [104, 118, 140]],
+    [0.56, [206, 216, 230]],
+    [0.72, [248, 251, 255]],
+    [1.00, [255, 255, 255]]
+  ];
+  const ramp = (t) => {
+    for (let i = 1; i < RAMP.length; i++) {
+      if (t <= RAMP[i][0]) {
+        const [t0, c0] = RAMP[i - 1], [t1, c1] = RAMP[i];
+        return L.mix(c0, c1, (t - t0) / (t1 - t0));
+      }
+    }
+    return RAMP[RAMP.length - 1][1];
+  };
+
+  const STEP = 5;
   pixels(b, w, h, (x, y) => {
-    // gradient of the height field -> surface normal -> reflection band
-    const dx = at(x + 1, y) - at(x - 1, y);
-    const dy = at(x, y + 1) - at(x, y - 1);
-    const n = L.clamp((dx * 8 + dy * 4 + 0.5), 0, 1);
-    const band = (Math.sin(n * Math.PI * 3.1) + 1) / 2;      // stacked reflections
-    let c = L.mix([28, 32, 40], [232, 238, 246], Math.pow(band, 0.75));
-    // oil-slick iridescence keyed off the slope
-    const hue = (n * 5.2 + at(x, y) * 2.4) % 1;
+    const dx = at(x + STEP, y) - at(x - STEP, y);
+    const dy = at(x, y + STEP) - at(x, y - STEP);
+    // gentle amplification keeps the bands broad and flowing
+    const slope = L.clamp(0.5 + dx * 2.0 + dy * 1.1, 0, 1);
+    // sky above, ground below — the vertical term is what sells it as polished
+    const horizon = L.clamp(1.15 - Math.abs(y / h - 0.34) * 1.5, 0, 1);
+    const t = L.clamp(slope * 0.55 + horizon * 0.45, 0, 1);
+
+    let c = ramp(t);
+    // oil slick, held to the mid-tones so highlights stay white and shadows blue
+    const hue = (slope * 1.4 + at(x, y) * 0.8) % 1;
     const irid = [
-      128 + 127 * Math.sin(6.28 * hue),
-      128 + 127 * Math.sin(6.28 * hue + 2.1),
-      128 + 127 * Math.sin(6.28 * hue + 4.2)
+      150 + 105 * Math.sin(6.283 * hue),
+      150 + 105 * Math.sin(6.283 * hue + 2.09),
+      150 + 105 * Math.sin(6.283 * hue + 4.19)
     ];
-    c = L.mix(c, irid, 0.26 * Math.pow(band, 0.5));
+    const midOnly = Math.max(0, 1 - Math.abs(t - 0.5) * 3.4);
+    c = L.mix(c, irid, 0.34 * midOnly);
     return [c[0], c[1], c[2], 255];
   });
 }

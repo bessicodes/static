@@ -185,7 +185,7 @@ export default {
   },
 
   'P4_MIDNIGHT_SUIT_TROUSERS.png'(x) {
-    const char = L.hex('#2b2f38');
+    const char = L.hex('#39404f');
     L.pantsBody(x, (b, w, h) => {
       b.fillStyle = L.rgb(char); b.fillRect(0, 0, w, h);
       L.weave(b, 0, 0, w, h, 0.05, 3);
