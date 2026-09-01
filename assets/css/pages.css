@@ -312,3 +312,10 @@ table.tbl .num { font-family: var(--mono); color: var(--paper); }
 @media (min-width: 1000px) {
   .tbl-scroll { width: min(940px, calc(100vw - (2 * var(--gut)))); }
 }
+
+/* download row under the filters */
+.ctl-foot { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding-top: 12px; }
+.ctl-foot .count { padding-top: 0; }
+.ctl-foot .btn { margin-left: auto; }
+#dl-note { margin: 8px 0 0; color: var(--dimmer); text-transform: none; letter-spacing: .02em; font-size: 11px; }
+@media (max-width: 560px) { .ctl-foot .btn { margin-left: 0; width: 100%; } }

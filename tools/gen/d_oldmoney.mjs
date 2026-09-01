@@ -233,22 +233,30 @@ export function jacketFront(c, fx, fy, fw, fh, o) {
 }
 
 /** Cuff detail on both sleeves: buttons, turnback, or a shirt cuff showing. */
+/**
+ * Cuff detail on both sleeves.
+ *
+ * Everything is positioned relative to `o.len`, the sleeve's own length, and
+ * goes through sleeveBand. A cuff pinned to a fixed fraction sits on bare skin
+ * the moment the sleeve is short.
+ */
 export function sleeveCuffs(x, o) {
+  const len = o.len ?? L.SLEEVE.long;
   for (const part of ['rlimb', 'llimb']) {
     if (o.turnback) {
-      L.wrapBand(x, part, 0.70, 0.14, (b, w, h) => {
+      L.sleeveBand(x, part, len - 0.15, 0.15, len, (b, w, h) => {
         b.fillStyle = L.rgb(L.shade(o.colour, 0.10)); b.fillRect(0, 0, w, h);
         b.fillStyle = 'rgba(0,0,0,0.22)'; b.fillRect(0, 0, w, 2);
       });
     }
     if (o.shirtCuff) {
-      L.wrapBand(x, part, 0.80, 0.06, (b, w, h) => {
+      L.sleeveBand(x, part, len - 0.06, 0.06, len, (b, w, h) => {
         b.fillStyle = L.rgb(o.shirtCuff); b.fillRect(0, 0, w, h);
       });
     }
     // buttons sit on one face only, clear of the seams
     const u = L.faceU(part, 'front');
-    L.wrapBand(x, part, 0.66, 0.16, (b, w, h) => {
+    L.sleeveBand(x, part, len - 0.19, 0.19, len, (b, w, h) => {
       b.fillStyle = L.rgb(o.button);
       for (let i = 0; i < (o.cuffButtons || 0); i++) {
         b.beginPath(); b.arc(u + 32, 4 + i * 6, 2.2, 0, 7); b.fill();
@@ -328,7 +336,7 @@ export default {
       c.fillStyle = 'rgba(0,0,0,0.30)';
       c.fillRect(fx + fw/2 - 1, fy + fh * 0.72, 2, fh * 0.28);
     });
-    sleeveCuffs(x, { colour: camel, button: horn, cuffButtons: 3, turnback: true });
+    sleeveCuffs(x, { colour: camel, button: horn, cuffButtons: 3, turnback: true, len: L.SLEEVE.long });
     L.hemShadow(x, 'torso');
     L.finish(x, { seed: 61, grainAmt: 6 });
   },
@@ -356,7 +364,7 @@ export default {
       c.fillStyle = L.rgb(L.shade(navy, -0.2));
       c.fillRect(fx + 31, fy + fh * 0.385, 6, 8);
     });
-    sleeveCuffs(x, { colour: navy, button: gold, cuffButtons: 3, shirtCuff: L.hex('#f0ece1') });
+    sleeveCuffs(x, { colour: navy, button: gold, cuffButtons: 3, shirtCuff: L.hex('#f0ece1'), len: L.SLEEVE.long });
     L.hemShadow(x, 'torso');
     L.finish(x, { seed: 62, grainAmt: 6 });
   },
@@ -459,7 +467,7 @@ export default {
       c.fillStyle = L.rgba(L.shade(sand, -0.12), 0.9);
       c.fillRect(fx, fy + 22, fw, 3);                 // back yoke
     });
-    sleeveCuffs(x, { colour: sand, button: sand, turnback: true, cuffButtons: 0 });
+    sleeveCuffs(x, { colour: sand, button: sand, turnback: true, cuffButtons: 0, len: L.SLEEVE.short });
     L.hemShadow(x, 'torso');
     L.finish(x, { seed: 65, grainAmt: 7 });
   },

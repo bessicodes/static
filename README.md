@@ -43,6 +43,26 @@ tools/
 
 ---
 
+## Getting the files for Roblox
+
+Every template ships in exactly the format Roblox wants: **585 × 559, 8-bit
+RGBA PNG, non-interlaced**, well under the 8 MB cap. Nothing needs converting —
+upload the file as downloaded.
+
+- **One design** — the PNG button on its catalogue card.
+- **Everything, or whatever the filters show** — the *Download as ZIP* button
+  under the filter bar. Filter to pants and it zips just the pants.
+
+The ZIP also contains **UPLOAD-SHEET.txt**: the name, description and keyword
+list for every design in it, plus the fee and pricing reminders, so the Roblox
+upload form can be filled from one place.
+
+The archive is built in the browser by `assets/js/zip.js` (a small STORE-only
+ZIP writer — PNGs are already compressed, so deflating again buys nothing). The
+PNGs go in byte-for-byte.
+
+---
+
 ## Adding a new design
 
 **1. Put the PNG in `designs/`.** It must be exactly 585 × 559.

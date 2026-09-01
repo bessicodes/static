@@ -446,6 +446,77 @@ export function pantsCaps(ctx, colour, legLen = 1) {
   }
 }
 
+/**
+ * A band on a sleeve, clamped to the sleeve's own length.
+ *
+ * Use this for every cuff, stripe or piece of sleeve lettering. Drawing a detail
+ * with wrapBand directly is how you end up with a cuff or a wordmark floating on
+ * the wearer's bare forearm when the sleeve turns out to be short.
+ */
+export function sleeveBand(ctx, part, top, height, len, draw) {
+  if (len <= 0) return;
+  const t = Math.min(top, len);
+  const h = Math.min(height, len - t);
+  if (h <= 0.001) return;
+  wrapBand(ctx, part, t, h, draw);
+}
+
+/**
+ * Cuts a neck opening so the wearer's own skin shows at the throat.
+ *
+ * On R6 the head covers the torso's top face, but the very top of the torso
+ * FRONT is visible right under the chin — so a garment painted solid to the top
+ * edge reads as if it swallows the neck. Call this LAST, after finish(), because
+ * the bleed pass would otherwise creep back into the opening.
+ */
+export function neckline(ctx, { width = 46, depth = 15, back = 9, shape = 'crew' } = {}) {
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+
+  const [fx, fy, fw] = TORSO.front;
+  const cx = fx + fw / 2;
+  ctx.beginPath();
+  if (shape === 'v') {
+    ctx.moveTo(cx - width / 2, fy - 2);
+    ctx.lineTo(cx, fy + depth * 1.7);
+    ctx.lineTo(cx + width / 2, fy - 2);
+  } else {
+    ctx.moveTo(cx - width / 2, fy - 2);
+    ctx.quadraticCurveTo(cx, fy + depth * 1.7, cx + width / 2, fy - 2);
+  }
+  ctx.closePath(); ctx.fill();
+
+  // shallow scoop at the back of the neck
+  const [bx, by, bw] = TORSO.back;
+  const bcx = bx + bw / 2;
+  ctx.beginPath();
+  ctx.moveTo(bcx - width / 2, by - 2);
+  ctx.quadraticCurveTo(bcx, by + back * 1.7, bcx + width / 2, by - 2);
+  ctx.closePath(); ctx.fill();
+
+  ctx.restore();
+}
+
+/**
+ * Clears the bottom of both limbs so the hands show bare skin.
+ * `from` is a fraction of the limb: 0.82 leaves the last 18% as hand.
+ */
+export function openHands(ctx, from = 0.82) {
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  for (const part of ['rlimb', 'llimb']) {
+    const rects = rectsFor(part);
+    const y = Math.round(LIMB_TOP + from * LIMB_H);
+    for (const k of ['front', 'back', 'lf', 'rt']) {
+      const [rx, , rw] = rects[k];
+      ctx.fillRect(rx - 3, y, rw + 6, (LIMB_TOP + LIMB_H) - y + 3);
+    }
+    const [dx, dy, dw, dh] = rects.down;
+    ctx.fillRect(dx - 3, dy - 3, dw + 6, dh + 6);
+  }
+  ctx.restore();
+}
+
 /** Standard finish: curvature on every part, hem shadows, grain, then bleed. */
 export function finish(ctx, { seed = 3, grainAmt = 6, curve = 0.15 } = {}) {
   curvature(ctx, 'torso', curve);

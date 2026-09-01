@@ -75,8 +75,10 @@ function colourBars(b, w, h) {
 }
 
 /** STATIC set vertically down a sleeve, repeated so it reads on all four faces. */
-function sleeveText(x, part, text, colour, size = 11) {
-  L.wrapBand(x, part, 0.14, 0.5, (b, w, h) => {
+function sleeveText(x, part, text, colour, len, size = 11) {
+  // clamped to the sleeve: on a short sleeve an unclamped band puts the
+  // wordmark on the wearer's bare forearm
+  L.sleeveBand(x, part, 0.14, Math.max(0, len - 0.20), len, (b, w, h) => {
     b.save();
     b.font = `900 ${size}px ${L.HEAVY}`;
     b.textAlign = 'center'; b.textBaseline = 'middle';
@@ -128,8 +130,8 @@ function coreTee(x, { body, ink, sleeve }) {
     c.fillText('NO SIGNAL — CH 00', fx + fw / 2, fy + fh * 0.42 + 30);
   });
 
-  sleeveText(x, 'rlimb', 'STATIC', L.rgba(ink, 0.72));
-  sleeveText(x, 'llimb', 'STATIC', L.rgba(ink, 0.72));
+  sleeveText(x, 'rlimb', 'STATIC', L.rgba(ink, 0.72), sleeve);
+  sleeveText(x, 'llimb', 'STATIC', L.rgba(ink, 0.72), sleeve);
   L.hemShadow(x, 'torso');
 }
 

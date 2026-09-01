@@ -2,7 +2,8 @@
 
 import { loadCatalogue } from './data.js';
 import { buildCard } from './card.js';
-import { markNav } from './ui.js';
+import { markNav, toast } from './ui.js';
+import { downloadAll } from './bulk.js';
 
 const el = {
   grid:   document.getElementById('grid'),
@@ -12,8 +13,12 @@ const el = {
   chips:  document.getElementById('kind-chips'),
   count:  document.getElementById('count'),
   empty:  document.getElementById('empty'),
-  status: document.getElementById('load-status')
+  status: document.getElementById('load-status'),
+  getAll: document.getElementById('get-all')
 };
+
+/** Whatever the filters are currently showing — the ZIP follows the view. */
+let visible = [];
 
 const state = { q: '', kind: 'all', style: 'all' };
 let all = [];
@@ -29,6 +34,7 @@ function matches(d) {
 
 function render() {
   const hits = all.filter(matches);
+  visible = hits;
 
   const frag = document.createDocumentFragment();
   hits.forEach(d => frag.appendChild(buildCard(el.tpl, d)));
@@ -38,6 +44,11 @@ function render() {
   const b = document.createElement('b');
   b.textContent = String(hits.length);
   el.count.append(b, ` of ${all.length} designs`);
+
+  el.getAll.disabled = hits.length === 0;
+  el.getAll.textContent = hits.length === all.length
+    ? `Download all ${hits.length} as ZIP`
+    : `Download these ${hits.length} as ZIP`;
 
   el.empty.hidden = hits.length > 0;
   el.grid.hidden = hits.length === 0;
@@ -79,6 +90,20 @@ function wireControls() {
     state.kind = btn.dataset.kind;
     paintChips(state.kind);
     render(); syncUrl();
+  });
+
+  el.getAll.addEventListener('click', async () => {
+    const label = el.getAll.textContent;
+    el.getAll.disabled = true;
+    try {
+      await downloadAll(visible, msg => { el.getAll.textContent = msg + '…'; });
+    } catch (err) {
+      console.error(err);
+      toast('Download failed — ' + err.message);
+    } finally {
+      el.getAll.textContent = label;
+      el.getAll.disabled = false;
+    }
   });
 }
 

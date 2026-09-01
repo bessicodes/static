@@ -245,7 +245,7 @@ export default {
         c.beginPath(); c.arc(px + 16, fy + 43, 2, 0, 7); c.fill();
       }
     });
-    sleeveCuffs(x, { colour: indigo, button: gold, cuffButtons: 2 });
+    sleeveCuffs(x, { colour: indigo, button: gold, cuffButtons: 2, len: L.SLEEVE.long });
     L.finish(x, { seed: 83, grainAmt: 6 });
   },
 
@@ -356,7 +356,7 @@ export default {
       c.fillStyle = 'rgba(0,0,0,0.35)';
       c.fillRect(fx + fw / 2 - 1, fy + fh * 0.66, 2, fh * 0.34);   // centre vent
     });
-    sleeveCuffs(x, { colour: char, button: L.hex('#15171c'), cuffButtons: 4, shirtCuff: L.hex('#f2f0ea') });
+    sleeveCuffs(x, { colour: char, button: L.hex('#15171c'), cuffButtons: 4, shirtCuff: L.hex('#f2f0ea'), len: L.SLEEVE.long });
     L.hemShadow(x, 'torso');
     L.finish(x, { seed: 86, grainAmt: 5 });
   },
@@ -404,7 +404,7 @@ export default {
       c.fillRect(fx + 24, fy + fh * 0.50, 20, 22);
       L.fitText(c, 'W', fx + 34, fy + fh * 0.50 + 11, 18, 16, L.HEAVY, L.rgb(navy));
     });
-    sleeveCuffs(x, { colour: white, button: white, cuffButtons: 2 });
+    sleeveCuffs(x, { colour: white, button: white, cuffButtons: 2, len: L.SLEEVE.long });
     L.wrapBand(x, 'torso', 0.90, 0.10, (b, w, h) => L.rib(b, 0, 0, w, h, navy, 4));
     L.finish(x, { seed: 87, grainAmt: 5 });
   },
