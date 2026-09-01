@@ -517,8 +517,117 @@ export function openHands(ctx, from = 0.82) {
   ctx.restore();
 }
 
-/** Standard finish: curvature on every part, hem shadows, grain, then bleed. */
-export function finish(ctx, { seed = 3, grainAmt = 6, curve = 0.15 } = {}) {
+/**
+ * Soft cloth folds over whatever is already painted on a part.
+ *
+ * This is the single biggest thing separating "flat coloured box" from
+ * "garment". Real fabric is never one even tone: it gathers into soft vertical
+ * creases that drift as they fall and deepen toward the hem.
+ *
+ * The fold field is a sum of sines whose frequencies are whole numbers of
+ * cycles around the body, evaluated against the wrap coordinate u — so it is
+ * seamless by construction, with no matching up to do at the face edges.
+ */
+export function clothFolds(ctx, part, seed = 1, strength = 0.17) {
+  const rects = rectsFor(part), order = orderFor(part);
+  const circ = circOf(part);
+  const faceTop = part === 'torso' ? BODY_TOP : LIMB_TOP;
+  const faceH   = part === 'torso' ? BODY_H : LIMB_H;
+
+  const r = rng(seed);
+  const harmonics = [];
+  for (let i = 0; i < 6; i++) harmonics.push([2 + (r() * 9 | 0), 0.35 + r() * 0.65, r() * Math.PI * 2]);
+
+  let u0 = 0;
+  for (const k of order) {
+    const [rx, ry, rw, rh] = rects[k];
+    const img = ctx.getImageData(rx - 2, ry - 2, rw + 4, rh + 4);
+    const d = img.data;
+    for (let yy = 0; yy < rh + 4; yy++) {
+      const vy = clamp01((ry - 2 + yy - faceTop) / faceH);
+      for (let xx = 0; xx < rw + 4; xx++) {
+        const i = (yy * (rw + 4) + xx) * 4;
+        if (d[i + 3] === 0) continue;
+        const u = u0 + xx - 2;
+        let s = 0, tot = 0;
+        for (const [kk, a, p] of harmonics) {
+          s += a * Math.sin((2 * Math.PI * kk * u) / circ + p + vy * 1.5);
+          tot += a;
+        }
+        s /= tot;
+        /*
+         * Adaptive amplitude. A pure multiply is nearly invisible on dark
+         * cloth — a 17% swing on a navy of (30,44,72) moves it by five levels
+         * and the garment still reads as a flat slab. So the fold is applied as
+         * an absolute offset that grows as the fabric gets darker.
+         */
+        const lum = d[i] * 0.30 + d[i+1] * 0.59 + d[i+2] * 0.11;
+        const amp = strength * (45 + 85 * (1 - lum / 255));
+        const delta = s * amp * (0.45 + 0.55 * vy);        // creases deepen toward the hem
+        d[i] = clamp(d[i] + delta); d[i+1] = clamp(d[i+1] + delta); d[i+2] = clamp(d[i+2] + delta);
+      }
+    }
+    ctx.putImageData(img, rx - 2, ry - 2);
+    u0 += rw;
+  }
+}
+
+const clamp01 = v => v < 0 ? 0 : v > 1 ? 1 : v;
+
+/**
+ * Contact shadow where parts meet: under the shoulder line, into the armholes
+ * and along the hem. Without it every edge meets at full brightness and the
+ * body reads as stacked bricks.
+ */
+export function occlusion(ctx, part, { top = 0.10, bottom = 0.13, sides = 0 } = {}) {
+  const faceTop = part === 'torso' ? BODY_TOP : LIMB_TOP;
+  const faceH   = part === 'torso' ? BODY_H : LIMB_H;
+
+  // source-atop throughout: shading must only darken cloth that is already
+  // there, never paint a grey ghost onto the bare hand or a knee gap
+  ctx.save();
+  ctx.globalCompositeOperation = 'source-atop';
+  if (top > 0) {
+    wrapBand(ctx, part, 0, 0.20, (b, w, h) => {
+      const g = b.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, `rgba(0,0,0,${top})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      b.fillStyle = g; b.fillRect(0, 0, w, h);
+    });
+  }
+  if (bottom > 0) {
+    wrapBand(ctx, part, 0.80, 0.20, (b, w, h) => {
+      const g = b.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, 'rgba(0,0,0,0)');
+      g.addColorStop(1, `rgba(0,0,0,${bottom})`);
+      b.fillStyle = g; b.fillRect(0, 0, w, h);
+    });
+  }
+  ctx.restore();
+  // darkens the two side faces, where the arms sit against the body
+  if (sides > 0 && part === 'torso') {
+    for (const k of ['lf', 'rt']) {
+      const [rx, ry, rw, rh] = TORSO[k];
+      ctx.save();
+      ctx.globalCompositeOperation = 'source-atop';
+      ctx.fillStyle = `rgba(0,0,0,${sides})`;
+      ctx.fillRect(rx - 2, ry - 2, rw + 4, rh + 4);
+      ctx.restore();
+    }
+  }
+}
+
+/** Standard finish: cloth folds, occlusion, curvature, grain, then bleed. */
+export function finish(ctx, { seed = 3, grainAmt = 6, curve = 0.18, cloth = 0.17 } = {}) {
+  if (cloth) {
+    clothFolds(ctx, 'torso', seed, cloth);
+    clothFolds(ctx, 'rlimb', seed + 31, cloth * 0.85);
+    clothFolds(ctx, 'llimb', seed + 67, cloth * 0.85);
+  }
+  occlusion(ctx, 'torso', { top: 0.12, bottom: 0.14, sides: 0.05 });
+  occlusion(ctx, 'rlimb', { top: 0.14, bottom: 0.10 });
+  occlusion(ctx, 'llimb', { top: 0.14, bottom: 0.10 });
+
   curvature(ctx, 'torso', curve);
   curvature(ctx, 'rlimb', curve);
   curvature(ctx, 'llimb', curve);

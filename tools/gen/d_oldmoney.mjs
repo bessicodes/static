@@ -234,6 +234,44 @@ export function jacketFront(c, fx, fy, fw, fh, o) {
 
 /** Cuff detail on both sleeves: buttons, turnback, or a shirt cuff showing. */
 /**
+ * Back of a tailored jacket: shoulder yoke, centre seam, side panels and vent.
+ *
+ * Without this the back of a blazer is one flat panel, which is most of why a
+ * tailored template reads as a coloured box rather than a garment.
+ */
+export function jacketBack(c, fx, fy, fw, fh, base, o = {}) {
+  const cx = fx + fw / 2;
+
+  // shoulder yoke seam, with a lit edge just under it
+  c.strokeStyle = L.rgba(L.shade(base, -0.42), 0.55);
+  c.lineWidth = 1.2;
+  c.beginPath(); c.moveTo(fx, fy + 24); c.lineTo(fx + fw, fy + 24); c.stroke();
+  c.strokeStyle = L.rgba(L.shade(base, 0.28), 0.35);
+  c.beginPath(); c.moveTo(fx, fy + 25.4); c.lineTo(fx + fw, fy + 25.4); c.stroke();
+
+  // centre back seam
+  const g = c.createLinearGradient(cx - 4, 0, cx + 4, 0);
+  g.addColorStop(0, L.rgba(L.shade(base, -0.30), 0));
+  g.addColorStop(0.5, L.rgba(L.shade(base, -0.34), 0.7));
+  g.addColorStop(1, L.rgba(L.shade(base, -0.30), 0));
+  c.fillStyle = g; c.fillRect(cx - 4, fy + 24, 8, fh - 24);
+  c.strokeStyle = L.rgba(L.shade(base, 0.22), 0.3);
+  c.lineWidth = 1;
+  c.beginPath(); c.moveTo(cx + 1.2, fy + 24); c.lineTo(cx + 1.2, fy + fh); c.stroke();
+
+  // side body seams, so the back reads as panels rather than one slab
+  for (const sx of [fx + fw * 0.24, fx + fw * 0.76]) {
+    c.strokeStyle = L.rgba(L.shade(base, -0.26), 0.45);
+    c.beginPath(); c.moveTo(sx, fy + 26); c.lineTo(sx, fy + fh); c.stroke();
+  }
+
+  if (o.vent !== false) {
+    c.fillStyle = 'rgba(0,0,0,0.42)';
+    c.fillRect(cx - 1.2, fy + fh * 0.70, 2.4, fh * 0.30);
+  }
+}
+
+/**
  * Cuff detail on both sleeves.
  *
  * Everything is positioned relative to `o.len`, the sleeve's own length, and
@@ -250,8 +288,24 @@ export function sleeveCuffs(x, o) {
       });
     }
     if (o.shirtCuff) {
+      // shadow cast by the jacket sleeve onto the cuff below it, then the cuff
+      // itself with its own rounding — a flat white fill reads as a paper band
+      L.sleeveBand(x, part, len - 0.10, 0.05, len, (b, w, h) => {
+        const g = b.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, 'rgba(0,0,0,0)');
+        g.addColorStop(1, 'rgba(0,0,0,0.42)');
+        b.fillStyle = g; b.fillRect(0, 0, w, h);
+      });
       L.sleeveBand(x, part, len - 0.06, 0.06, len, (b, w, h) => {
         b.fillStyle = L.rgb(o.shirtCuff); b.fillRect(0, 0, w, h);
+        const g = b.createLinearGradient(0, 0, 0, h);
+        g.addColorStop(0, 'rgba(0,0,0,0.34)');      // in shadow under the sleeve
+        g.addColorStop(0.45, 'rgba(255,255,255,0.10)');
+        g.addColorStop(1, 'rgba(0,0,0,0.22)');      // turns under at the wrist
+        b.fillStyle = g; b.fillRect(0, 0, w, h);
+        // cuff link / button on the front face only
+        b.fillStyle = L.rgba(L.shade(o.shirtCuff, -0.45), 0.8);
+        b.fillRect(L.faceU(part, 'front') + 30, h * 0.35, 3, 3);
       });
     }
     // buttons sit on one face only, clear of the seams
@@ -324,6 +378,7 @@ export default {
     });
     // buttoned half-belt across the back
     L.face(x, 'torso', 'back', (c, fx, fy, fw, fh) => {
+      jacketBack(c, fx, fy, fw, fh, camel, { vent: false });
       c.fillStyle = L.rgb(L.shade(camel, -0.14));
       c.fillRect(fx + 24, fy + fh * 0.58, fw - 48, 10);
       c.strokeStyle = 'rgba(0,0,0,0.35)'; c.lineWidth = 1;
@@ -364,6 +419,7 @@ export default {
       c.fillStyle = L.rgb(L.shade(navy, -0.2));
       c.fillRect(fx + 31, fy + fh * 0.385, 6, 8);
     });
+    L.face(x, 'torso', 'back', (c, fx, fy, fw, fh) => jacketBack(c, fx, fy, fw, fh, navy));
     sleeveCuffs(x, { colour: navy, button: gold, cuffButtons: 3, shirtCuff: L.hex('#f0ece1'), len: L.SLEEVE.long });
     L.hemShadow(x, 'torso');
     L.finish(x, { seed: 62, grainAmt: 6 });

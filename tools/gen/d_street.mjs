@@ -1,7 +1,7 @@
 /* d_street.mjs — jackets, jerseys, alt and Y2K pieces. */
 
 import * as L from './lib.mjs';
-import { jacketFront, sleeveCuffs, quilting } from './d_oldmoney.mjs';
+import { jacketFront, sleeveCuffs, quilting, jacketBack } from './d_oldmoney.mjs';
 
 /* -------------------------------------------------------------- surfaces --- */
 
@@ -352,10 +352,7 @@ export default {
         pocketSquare: L.hex('#f2f0ea')
       });
     });
-    L.face(x, 'torso', 'back', (c, fx, fy, fw, fh) => {
-      c.fillStyle = 'rgba(0,0,0,0.35)';
-      c.fillRect(fx + fw / 2 - 1, fy + fh * 0.66, 2, fh * 0.34);   // centre vent
-    });
+    L.face(x, 'torso', 'back', (c, fx, fy, fw, fh) => jacketBack(c, fx, fy, fw, fh, char));
     sleeveCuffs(x, { colour: char, button: L.hex('#15171c'), cuffButtons: 4, shirtCuff: L.hex('#f2f0ea'), len: L.SLEEVE.long });
     L.hemShadow(x, 'torso');
     L.finish(x, { seed: 86, grainAmt: 5 });
